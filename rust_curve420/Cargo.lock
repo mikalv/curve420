@@ -43,6 +43,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "curve420"
+version = "0.1.0"
+dependencies = [
+ "lazy_static",
+ "num-bigint",
+ "num-traits",
+ "rand",
+ "sha2",
+]
+
+[[package]]
 name = "digest"
 version = "0.10.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -169,17 +180,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ec0be4795e2f6a28069bec0b5ff3e2ac9bafc99e6a9a7dc3547996c5c816922c"
 dependencies = [
  "getrandom",
-]
-
-[[package]]
-name = "rust_ed420"
-version = "0.1.0"
-dependencies = [
- "lazy_static",
- "num-bigint",
- "num-traits",
- "rand",
- "sha2",
 ]
 
 [[package]]

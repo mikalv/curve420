@@ -1,6 +1,6 @@
 // examples/schnorr_signature.rs
 
-use rust_ed420::schnorr::{keygen, sign, verify};
+use curve420::schnorr::{keygen, sign, verify};
 
 fn main() {
     // 1. Key Generation

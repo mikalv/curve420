@@ -1,7 +1,7 @@
 // examples/diffie_hellman.rs
 
-use rust_ed420::montgomery::{montgomery_ladder, G_MONT};
-use rust_ed420::curve::L; // The order of the group
+use curve420::montgomery::{montgomery_ladder, G_MONT};
+use curve420::curve::L; // The order of the group
 use num_bigint::RandBigInt;
 
 fn main() {

@@ -1,6 +1,6 @@
 // examples/partially_blind_signature.rs
 
-use rust_ed420::schnorr::{
+use curve420::schnorr::{
     keygen,
     PartiallyBlindSignatureRequester,
     BlindSignatureSigner, // The same signer can be used

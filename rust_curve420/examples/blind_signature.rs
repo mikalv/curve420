@@ -1,6 +1,6 @@
 // examples/blind_signature.rs
 
-use rust_ed420::schnorr::{
+use curve420::schnorr::{
     keygen,
     BlindSignatureRequester,
     BlindSignatureSigner,
