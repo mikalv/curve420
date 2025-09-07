@@ -54,3 +54,9 @@ Output written to `proved/vectors.json`:
 - `dh_checks`: 4 DH-par med delt u og match=true
 - `edwards_schnorr`: (sk, pk_x, pk_y, R_x, R_y, e, s, msg_hex, verify=true)
 - `edwards_blind_schnorr`: (signer_sk, signer_pk_x/y, Rprime_x/y, e_prime, s_prime, msg_hex, verify=true)
+
+## Ristretto (experimental)
+
+- Export constants (a = −1 view): `make ristretto-constants` → `proved/ristretto_constants.json`
+- Provisional vectors (current encoding uses Edwards x + sign(y)): `make ristretto-vectors` → `proved/ristretto_vectors.json`
+- Note: The Rust crate includes a working round-trip with the provisional encoding. Final Ristretto encode/decode will replace this and vectors will be updated accordingly.

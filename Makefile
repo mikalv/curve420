@@ -44,3 +44,11 @@ all: prove-security-strong vectors security-notes
 .PHONY: invalid-corpus
 invalid-corpus:
 	$(SAGE) -q SAGE/generate_invalid_corpus.sage
+
+.PHONY: ristretto-constants
+ristretto-constants:
+	$(SAGE_ENV) $(SAGE) -q SAGE/export_ristretto_constants.sage
+
+.PHONY: ristretto-vectors
+ristretto-vectors:
+	$(SAGE_ENV) $(SAGE) -q SAGE/generate_ristretto_vectors.sage
