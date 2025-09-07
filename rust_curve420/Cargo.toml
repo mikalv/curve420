@@ -6,6 +6,9 @@ authors = ["Mikal Villa <mikalv@mikalv.net>"]
 description = "Implementation of the Curve420 elliptic curve in Rust"
 license = "Apache-2.0"
 repository = "https://github.com/mikalv/curve420"
+readme = "README.md"
+keywords = ["elliptic-curve", "ecdh", "schnorr", "crypto"]
+categories = ["cryptography"]
 
 [dependencies]
 num-bigint = { version = "0.4", features = ["rand"] }
