@@ -1,0 +1,10 @@
+.DS_Store
+.venv/
+pycache/
+.pytest_cache/
+*.pyc
+.sage/
+*.sage.py
+target/
+proved/*.tmp
+

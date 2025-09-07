@@ -1,0 +1,77 @@
+# Curve420 Specification (v1)
+
+Status: Final (v1)
+Date: 2025-09-07
+
+## Field
+- Prime: `p = 2^420 - 335` (420 bits)
+- Field: Fp with p as above
+
+## Curve Models
+
+### Montgomery (for ECDH)
+- Equation: `v^2 = u^3 + A*u^2 + u` with `B = 1`.
+- Parameter A (decimal):
+  `763975519699500577645754547835125169481986463482154078046572648671788968290548038674290307302429817161505744408446033521089602`
+
+### Edwards (for signatures)
+- Equation: `a*x^2 + y^2 = 1 + d*x^2*y^2` with `a = A + 2`, `d = A - 2` in Fp.
+- Parameters (decimal):
+  - a = `763975519699500577645754547835125169481986463482154078046572648671788968290548038674290307302429817161505744408446033521089604`
+  - d = `763975519699500577645754547835125169481986463482154078046572648671788968290548038674290307302429817161505744408446033521089600`
+
+## Group Orders
+- Total order: `N = h * ℓ`, with `h = 8` (v2 = 3) and prime `ℓ`:
+  - ℓ = `338460656020607282663380637712778772392143197677711984273740183501508577674026655281164768623743539442603492250355597371718719`
+  - Binary cofactor decomposition: `h = 2^3`
+
+## Base Points (frozen)
+- Montgomery basepoint G_M = (u, v):
+  - u = `1887066872174968132246224128199266266323489104588603923691363826518154582291788366769852665419756146257203683605002692187211605`
+  - v = `1615823937666138581405149982946858036615132278772287171232550469704961695279457501113588538572409066758954677368118289169060562`
+- Edwards basepoint G_E = (x, y):
+  - x = `2554519045303036994902077297242990796196199161457630080356703041833906288977089421513471756737913123939108844302244613830350009`
+  - y = `1554004282195909523747673681974014268960308454695342458183393593582942692590987497223833263666951454840260505456918987028153736`
+
+## Mapping (frozen)
+With `a = A + 2`, `d = A - 2` (as above) and `B = 1`, we use the unscaled mapping:
+- To Edwards: `x = u / v`, `y = (u - 1)/(u + 1)`
+- To Montgomery: `u = (1 + y)/(1 - y)`, `v = u / x`
+Round-trip mapping has been validated for the published base points.
+
+Note: For completeness proofs of “complete Edwards addition,” we evaluate `d' = (2 - A)/(A + 2)` in Fp and verify `d'` is a non-square. This is a separate a = −1 view for proof purposes; the published Edwards parameters remain `a = A + 2`, `d = A - 2`.
+
+## Deterministic Basepoint Selection
+- Domain separation string (frozen): `Curve420:hash:{index}:mont` where `index = 5769` from `hash_5769.json`.
+- Procedure on the Montgomery curve E(Fp):
+  - Seed RNG with `SHAKE128(DS).digest(16)` via `set_random_seed`.
+  - Loop: `R = E.random_point()`, `H = (N/ℓ) * R`.
+  - If `H != O` and `ℓ * H == O`, output `G_M = H`.
+  - Map to Edwards using the frozen mapping above for `G_E`.
+- The base points in `curve420.json` are frozen as the result of this method.
+
+## Serialization (frozen)
+- Byte length: 53 bytes (420 bits), little‑endian.
+- Montgomery (ECDH): encode `u` only, field element as 53‑byte little‑endian; reject out‑of‑range and non‑canonical encodings. All‑zero shared secret MUST be rejected.
+- Edwards (signatures): encode `x` with sign bit of `y` in the top bit of the last byte; define sign(y) = y mod 2. Encodings MUST be canonical field encodings and decode/encode MUST round‑trip.
+ - Canonical implementation cofactor: `h_impl = h2 * s = 2^3 * 1 = 8`.
+
+## Security Notes (summary)
+- j ≠ 0, 1728; `d' = (2 − A)/(A + 2)` non‑square (complete Edwards addition).
+- Cofactor relation `N = h * ℓ` holds; curve is not anomalous (N ≠ p).
+- MOV lower bound: no k ≤ 1000 with `ℓ | (p^k − 1)` (per `prove-security-strong`).
+- Twist: `v2(N_twist) = 2`; odd(N_twist) has small factor 401; remaining cofactor ~410 bits (probable composite under bounded search); invalid‑curve checks required in protocols.
+
+### Certificates
+- Subgroup prime ℓ: ECPP certificate recommended; target exported at `proved/certs/l.txt`.
+- Twist odd part: optional certificate; target exported at `proved/certs/odd_twist_odd.txt`.
+ - Proven-prime log (local evidence): `proved/certs/l.proof.txt` (via `make prove-l-with-sage`), records Sage version and `is_prime(proof=True)` result.
+
+## Test Vectors
+- ECDH: `proved/vectors.json` → section `montgomery_u_only` (sk, pk_u) and `dh_checks` (shared_u, match=true).
+- Edwards Schnorr: `proved/vectors.json` → section `edwards_schnorr` (sk, pk, R, e, s, verify=true, msg_hex).
+- Edwards Blind Schnorr: `proved/vectors.json` → section `edwards_blind_schnorr` (signer pk, R', e', s', verify=true, msg_hex).
+
+## Versioning
+- Parameters frozen as `curve420-v1` (this commit).
+- Any change to parameters or basepoint MUST bump the version.
