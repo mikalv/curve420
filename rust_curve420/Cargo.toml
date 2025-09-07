@@ -1,7 +1,11 @@
 [package]
-name = "rust_ed420"
+name = "curve420"
 version = "0.1.0"
 edition = "2021"
+authors = ["Mikal Villa <mikalv@mikalv.net>"]
+description = "Implementation of the Curve420 elliptic curve in Rust"
+license = "Apache-2.0"
+repository = "https://github.com/mikalv/curve420"
 
 [dependencies]
 num-bigint = { version = "0.4", features = ["rand"] }
